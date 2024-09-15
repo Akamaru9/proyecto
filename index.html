@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Unidades Automático INSPIRATEX</title>
+    <script>
+        // Función para realizar la conversión automáticamente
+        function convertir() {
+            let tipoConversion = document.getElementById("tipoConversion").value;
+            if (tipoConversion === "peso") {
+                mostrarCampoPeso();
+                calcularPeso(); // Si selecciona calcular peso
+            } else if (tipoConversion === "metraje") {
+                mostrarCampoMetraje();
+                calcularMetraje(); // Si selecciona calcular metraje
+            }
+        }
+
+        // Función para calcular el peso a partir del metraje
+        function calcularPeso() {
+            let metrosBase = parseFloat(document.getElementById("metrosBase").value);
+            let gramosBase = parseFloat(document.getElementById("gramosBase").value);
+            let metrosAConvertir = parseFloat(document.getElementById("metrosAConvertir").value);
+            let equivalenciaResultado;
+
+            // Convertir la unidad de metros base y a convertir
+            let unidadMetrosBase = document.getElementById("unidadMetrosBase").value;
+            let unidadMetrosConvertir = document.getElementById("unidadMetrosConvertir").value;
+            if (unidadMetrosBase === "centimetros") {
+                metrosBase = metrosBase / 100;
+            }
+            if (unidadMetrosConvertir === "centimetros") {
+                metrosAConvertir = metrosAConvertir / 100;
+            }
+
+            // Convertir gramos base a gramos si es necesario
+            let unidadGramosBase = document.getElementById("unidadGramosBase").value;
+            if (unidadGramosBase === "kilogramos") {
+                gramosBase = gramosBase * 1000;
+            }
+
+            // Aplicar regla de tres simple para calcular el peso
+            equivalenciaResultado = (gramosBase * metrosAConvertir) / metrosBase;
+
+            // Mostrar el resultado en gramos o kilogramos
+            actualizarResultadoPeso(equivalenciaResultado);
+        }
+
+        // Función para calcular el metraje a partir del peso
+        function calcularMetraje() {
+            let metrosBase = parseFloat(document.getElementById("metrosBase").value);
+            let gramosBase = parseFloat(document.getElementById("gramosBase").value);
+            let pesoAConvertir = parseFloat(document.getElementById("pesoAConvertir").value);
+            let equivalenciaResultado;
+
+            // Convertir la unidad de metros base
+            let unidadMetrosBase = document.getElementById("unidadMetrosBase").value;
+            if (unidadMetrosBase === "centimetros") {
+                metrosBase = metrosBase / 100;
+            }
+
+            // Convertir gramos base y el peso a convertir
+            let unidadGramosBase = document.getElementById("unidadGramosBase").value;
+            let unidadPesoConvertir = document.getElementById("unidadPesoConvertir").value;
+            if (unidadGramosBase === "kilogramos") {
+                gramosBase = gramosBase * 1000;
+            }
+            if (unidadPesoConvertir === "kilogramos") {
+                pesoAConvertir = pesoAConvertir * 1000;
+            }
+
+            // Aplicar regla de tres simple para calcular el metraje
+            equivalenciaResultado = (pesoAConvertir * metrosBase) / gramosBase;
+
+            // Mostrar el resultado en metros o centímetros
+            actualizarResultadoMetraje(equivalenciaResultado);
+        }
+
+        // Función para actualizar el resultado de peso
+        function actualizarResultadoPeso(equivalenciaResultado) {
+            let unidadResultado = document.getElementById("unidadResultadoPeso").value;
+            let resultadoConvertido = equivalenciaResultado;
+
+            // Convertir a kilogramos si es necesario
+            if (unidadResultado === "kilogramos") {
+                resultadoConvertido = equivalenciaResultado / 1000;
+            }
+
+            document.getElementById("resultadoFinal").innerText = "Resultado en " + unidadResultado + ": " + resultadoConvertido;
+        }
+
+        // Función para actualizar el resultado de metraje
+        function actualizarResultadoMetraje(equivalenciaResultado) {
+            let unidadResultado = document.getElementById("unidadResultadoMetraje").value;
+            let resultadoConvertido = equivalenciaResultado;
+
+            // Convertir a centímetros si es necesario
+            if (unidadResultado === "centimetros") {
+                resultadoConvertido = equivalenciaResultado * 100;
+            }
+
+            document.getElementById("resultadoFinal").innerText = "Resultado en " + unidadResultado + ": " + resultadoConvertido;
+        }
+
+        // Función para mostrar los campos correspondientes para calcular el peso
+        function mostrarCampoPeso() {
+            document.getElementById("campoPeso").style.display = "block";
+            document.getElementById("resultadoPeso").style.display = "block";
+            document.getElementById("campoMetraje").style.display = "none";
+            document.getElementById("resultadoMetraje").style.display = "none";
+        }
+
+        // Función para mostrar los campos correspondientes para calcular el metraje
+        function mostrarCampoMetraje() {
+            document.getElementById("campoPeso").style.display = "none";
+            document.getElementById("resultadoPeso").style.display = "none";
+            document.getElementById("campoMetraje").style.display = "block";
+            document.getElementById("resultadoMetraje").style.display = "block";
+        }
+
+        // Ejecutar la conversión automáticamente cuando cambian los valores
+        document.addEventListener('input', convertir);
+    </script>
+</head>
+<body>
+    <h1>Conversor de Unidades Automático INSPIRATEX</h1>
+
+    <!-- Selección del tipo de conversión (peso o metraje) -->
+    <label for="tipoConversion">Selecciona qué deseas calcular:</label>
+    <select id="tipoConversion" onchange="convertir()">
+        <option value="peso">Calcular Peso</option>
+        <option value="metraje">Calcular Metraje</option>
+    </select>
+    <br><br>
+
+    <!-- Campos para ingresar la equivalencia base en metros y gramos -->
+    <label for="metrosBase">Equivalencia:</label>
+    <input type="number" id="metrosBase" placeholder="Inserte dato (inspiratex)" required>
+    <select id="unidadMetrosBase">
+        <option value="metros">Metros</option>
+        <option value="centimetros">Centímetros</option>
+    </select>
+    
+    <label for="gramosBase">Equivale a:</label>
+    <input type="number" id="gramosBase" placeholder="Inserte dato (inspiratex)" required>
+    <select id="unidadGramosBase">
+        <option value="gramos">Gramos</option>
+        <option value="kilogramos">Kilogramos</option>
+    </select>
+    <br><br>
+
+    <!-- Campos dinámicos según la opción seleccionada -->
+    <div id="campoPeso" style="display: none;">
+        <!-- Campo para ingresar los metros a convertir -->
+        <label for="metrosAConvertir">Introduce el valor que desea convertir:</label>
+        <input type="number" id="metrosAConvertir" placeholder="Inserte valor (inspiratex)">
+        <select id="unidadMetrosConvertir">
+            <option value="metros">Metros</option>
+            <option value="centimetros">Centímetros</option>
+        </select>
+        <br><br>
+    </div>
+
+    <div id="campoMetraje" style="display: none;">
+        <!-- Campo para ingresar el peso a convertir -->
+        <label for="pesoAConvertir">Introduce la cantidad de peso:</label>
+        <input type="number" id="pesoAConvertir" placeholder="Inserte valor (inspiratex)">
+        <select id="unidadPesoConvertir">
+            <option value="gramos">Gramos</option>
+            <option value="kilogramos">Kilogramos</option>
+        </select>
+        <br><br>
+    </div>
+
+    <!-- Selección de la unidad de resultado -->
+    <div id="resultadoPeso" style="display: none;">
+        <label for="unidadResultadoPeso">Selecciona la unidad del resultado (Peso):</label>
+        <select id="unidadResultadoPeso" onchange="convertir()">
+            <option value="gramos">Gramos</option>
+            <option value="kilogramos">Kilogramos</option>
+        </select>
+        <br><br>
+    </div>
+
+    <div id="resultadoMetraje" style="display: none;">
+        <label for="unidadResultadoMetraje">Selecciona la unidad del resultado (Metraje):</label>
+        <select id="unidadResultadoMetraje" onchange="convertir()">
+            <option value="metros">Metros</option>
+            <option value="centimetros">Centímetros</option>
+        </select>
+        <br><br>
+    </div>
+
+    <!-- Mostrar el resultado final -->
+    <p id="resultadoFinal">Resultado: </p>
+
+</body>
+</html>
